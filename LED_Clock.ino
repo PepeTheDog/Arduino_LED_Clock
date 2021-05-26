@@ -9,9 +9,9 @@ int clockPin = 7;
 uint8_t sBtnPressed = 0;
 uint8_t mBtnPressed = 0;
 uint8_t pBtnPressed = 0;
-unsigned long long sUnpressTimer;
-unsigned long long pUnpressTimer;
-unsigned long long mUnpressTimer;
+unsigned long sUnpressTimer;
+unsigned long pUnpressTimer;
+unsigned long mUnpressTimer;
 
 int ora = 0;
 int minut = 0;
@@ -20,8 +20,8 @@ char state = 's';
 char setState = 'h';
 byte numbers[] = {0b11000000, 0b11111001, 0b10100100, 0b10110000, 0b10011001, 0b10010010, 0b10000010, 0b11111000, 0b10000000, 0b10010000};
 
-unsigned long long now = 0;
-unsigned long long stateTimer;
+unsigned long now = 0;
+unsigned long stateTimer;
 
 void setup() {
   pinMode(latchPin, OUTPUT);
@@ -31,7 +31,7 @@ void setup() {
 }
 
 void checkSBtn(){
-  unsigned long long pressTimer;
+  unsigned long pressTimer;
   if ((digitalRead(SET_BTN) == LOW) && (sBtnPressed == 0)){
     sBtnPressed = 1;
     pressTimer = millis();
@@ -43,7 +43,7 @@ void checkSBtn(){
 }
 
 void checkMBtn(){
-  unsigned long long pressTimer;
+  unsigned long pressTimer;
   if ((digitalRead(MINUS_BTN) == LOW) && (mBtnPressed == 0)){
     mBtnPressed = 1;
     pressTimer = millis();
@@ -55,7 +55,7 @@ void checkMBtn(){
 }
 
 void checkPBtn(){
-  unsigned long long pressTimer;
+  unsigned long pressTimer;
   if ((digitalRead(PLUS_BTN) == LOW) && (pBtnPressed == 0)){
     pBtnPressed = 1;
     pressTimer = millis();
