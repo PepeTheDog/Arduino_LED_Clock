@@ -1,6 +1,3 @@
-// WIP
-// Neterminat
-
 int latchPin = 4;
 int dataPin = 8;
 int clockPin = 7;
@@ -39,6 +36,7 @@ void setup() {
   pinMode(dataPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
   pinMode(buzzerPin, OUTPUT);
+  digitalWrite(buzzerPin, HIGH);
   Serial.begin(9600);
 }
 
@@ -98,6 +96,17 @@ void displayHour(int hour){
   shiftOut(dataPin, clockPin, MSBFIRST, numbers[hour/10]);
   shiftOut(dataPin, clockPin, MSBFIRST, 0b00000001);
   digitalWrite(latchPin, HIGH);
+}
+
+void displayDPHour(int hour){
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, MSBFIRST, numbers[hour%10] & 0b01111111);
+    shiftOut(dataPin, clockPin, MSBFIRST, 0b00000010);
+    digitalWrite(latchPin, HIGH);
+    digitalWrite(latchPin, LOW);
+    shiftOut(dataPin, clockPin, MSBFIRST, numbers[hour/10]);
+    shiftOut(dataPin, clockPin, MSBFIRST, 0b00000001);
+    digitalWrite(latchPin, HIGH);
 }
 
 void loop() {
@@ -217,15 +226,13 @@ void loop() {
     if (isA == 1){
       buzzerTimer = millis();
       if (oraA == ora && minutA == minut){
-        digitalWrite(buzzerPin, HIGH);
-        if (millis() - buzzerTimer > 1500)
-          digitalWrite(buzzerPin, LOW);
-      }
-      else{
-        isA = 0;
         digitalWrite(buzzerPin, LOW);
+        if (millis() - buzzerTimer > 1500)
+          digitalWrite(buzzerPin, HIGH);
       }
+      else digitalWrite(buzzerPin, HIGH);
     }
+    else digitalWrite(buzzerPin, HIGH);
     if (millis() - now >= 1000){
       now = millis();
       secunda += 1;
@@ -248,7 +255,10 @@ void loop() {
       Serial.println(secunda);
     } // Update ora
     displayMinute(minut);
-    displayHour(ora);
+    if (secunda%2 == 0)
+      displayHour(ora);
+    if (secunda%2 == 1)
+      displayDPHour(ora);
   }
   checkSBtn();
   checkMBtn();
