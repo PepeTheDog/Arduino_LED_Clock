@@ -233,6 +233,7 @@ void loop() {
       else digitalWrite(buzzerPin, HIGH);
     }
     else digitalWrite(buzzerPin, HIGH);
+    // porneste si opreste buzzer-ul
     if (millis() - now >= 1000){
       now = millis();
       secunda += 1;
