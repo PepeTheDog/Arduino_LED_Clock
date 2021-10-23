@@ -18,7 +18,7 @@ int ora = 0;
 int minut = 0;
 int secunda = 0;
 
-uint8_t isA = 0;
+bool isA = false;
 int oraA = 0;
 int minutA = 0;
 int secundaA = 0;
@@ -109,6 +109,19 @@ void displayDPHour(int hour){
     digitalWrite(latchPin, HIGH);
 }
 
+void soundAlarm(){
+  if (oraA == ora && minutA == minut){
+    if (secunda < 20){
+      if (secunda%2 == 0)
+        digitalWrite(buzzerPin, LOW);
+      if (secunda%2 == 1)
+        digitalWrite(buzzerPin, HIGH);
+    }
+    else digitalWrite(buzzerPin, HIGH);
+  }
+  else digitalWrite(buzzerPin, HIGH);
+}
+
 void loop() {
   if (state == 's'){
     if (setState == 'h'){
@@ -166,7 +179,7 @@ void loop() {
           oraA = 0;
         pBtnPressed = 2;
         pUnpressTimer = millis();
-        isA = 1;
+        isA = true;
       } // Plus ora
       if (mBtnPressed == 1 && (millis() - stateTimer > 300)){
         if (oraA != 0)
@@ -174,7 +187,7 @@ void loop() {
         else oraA = 23;
         mBtnPressed = 2;
         mUnpressTimer = millis();
-        isA = 1;
+        isA = true;
       } // Minus ora
       displayHour(oraA);
       if (sBtnPressed == 1 && (millis() - stateTimer > 300)){
@@ -190,7 +203,7 @@ void loop() {
           minutA = 0;
         pBtnPressed = 2;
         pUnpressTimer = millis();
-        isA = 1;
+        isA = true;
       } // plus minute
       if (mBtnPressed == 1){
         if (minutA != 0)
@@ -198,7 +211,7 @@ void loop() {
         else minutA = 59;
         mBtnPressed = 2;
         mUnpressTimer = millis();
-        isA = 1;
+        isA = true;
       } // minus minute
       displayMinute(minutA);
       if (sBtnPressed == 1){
@@ -222,16 +235,9 @@ void loop() {
       stateTimer = millis();
     }
     if (pBtnPressed == 1)
-      isA = 0;
-    if (isA == 1){
-      buzzerTimer = millis();
-      if (oraA == ora && minutA == minut){
-        digitalWrite(buzzerPin, LOW);
-        if (millis() - buzzerTimer > 1500)
-          digitalWrite(buzzerPin, HIGH);
-      }
-      else digitalWrite(buzzerPin, HIGH);
-    }
+      isA = false;
+    if (isA)
+      soundAlarm();
     else digitalWrite(buzzerPin, HIGH);
     // porneste si opreste buzzer-ul
     if (millis() - now >= 1000){
